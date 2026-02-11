@@ -30,6 +30,7 @@ Build AI voice agents with the [Atoms SDK](https://atoms-docs.smallest.ai/dev).
 | Example | What You'll Learn |
 |---------|-------------------|
 | [bank_csr](./bank_csr/) | Multi-round tool chaining, real SQLite DB, deterministic computation, audit logging, banking actions |
+| [atoms_sdk_web_agent](./atoms_sdk_web_agent/) | Multi-agent collaboration, tool calling, Next.js integration |
 
 ## Platform Features
 
