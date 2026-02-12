@@ -30,6 +30,8 @@ Build AI voice agents with the [Atoms SDK](https://atoms-docs.smallest.ai/dev).
 | Example | What You'll Learn |
 |---------|-------------------|
 | [bank_csr](./bank_csr/) | Multi-round tool chaining, real SQLite DB, deterministic computation, audit logging, banking actions |
+| [appointment_scheduler](./appointment_scheduler/) | Cal.com integration, slot negotiation ("5pm is busy, how about 7:30?"), live booking |
+| [form_filler](./form_filler/) | State machine data collection, Jotform integration, typed validation, backtracking |
 | [atoms_sdk_web_agent](./atoms_sdk_web_agent/) | Multi-agent collaboration, tool calling, Next.js integration |
 
 ## Platform Features
@@ -42,25 +44,26 @@ Build AI voice agents with the [Atoms SDK](https://atoms-docs.smallest.ai/dev).
 
 ## Quick Start
 
-### Step 1: Create env + install base deps (once, from repo root)
+### Step 1: Install base deps (once, from repo root)
 
 ```bash
-uv venv
-uv pip install -r requirements.txt
+pip install -r requirements.txt
 ```
 
 ### Step 2: Run an example
 
 ```bash
-uv pip install -r voice-agents/getting_started/requirements.txt
-uv run voice-agents/getting_started/app.py
+cd voice-agents/getting_started
+pip install -r requirements.txt
+python3 app.py
 ```
 
 For another example:
 
 ```bash
-uv pip install -r voice-agents/bank_csr/requirements.txt
-uv run voice-agents/bank_csr/app.py
+cd voice-agents/bank_csr
+pip install -r requirements.txt
+python3 app.py
 ```
 
 ### Step 3: Connect via CLI
@@ -78,7 +81,6 @@ export OPENAI_API_KEY=your_openai_key
 
 ## Requirements
 
-- [uv](https://docs.astral.sh/uv/) (Python package manager)
 - Python 3.10+
 - `smallestai` SDK (`>=4.3.0`)
 - OpenAI API key (for LLM)
