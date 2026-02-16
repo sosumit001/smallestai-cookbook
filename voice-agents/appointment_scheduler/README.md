@@ -110,7 +110,7 @@ dateparser
 ### 1. Install
 
 ```bash
-pip install -r requirements.txt
+uv pip install -r requirements.txt
 ```
 
 ### 2. Set environment variables
@@ -137,7 +137,7 @@ CAL_EVENT_TYPE_ID=12345
 ### 3. Run
 
 ```bash
-python3 app.py
+uv run app.py
 ```
 
 ### 4. Test
@@ -184,7 +184,7 @@ https://app.cal.com/event-types/12345
 ```bash
 export CAL_API_KEY=cal_live_...
 export CAL_EVENT_TYPE_ID=12345
-python3 app.py
+uv run app.py
 ```
 
 After booking an appointment over the phone, check your Cal.com dashboard — the booking will appear with patient name, reason, and time.

@@ -152,6 +152,11 @@ class SupportAgent(OutputAgentNode):
                     output=final_text,
                 )
 
+            if final_text:
+                self.context.add_message(
+                    {"role": "assistant", "content": final_text}
+                )
+
     # ------------------------------------------------------------------
     # Tools
     # ------------------------------------------------------------------

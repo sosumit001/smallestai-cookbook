@@ -159,7 +159,7 @@ httpx
 ### 1. Install
 
 ```bash
-pip install -r requirements.txt
+uv pip install -r requirements.txt
 ```
 
 ### 2. Set environment variables
@@ -186,7 +186,7 @@ JOTFORM_FORM_ID=...
 ### 3. Run
 
 ```bash
-python3 app.py
+uv run app.py
 ```
 
 ### 4. Test
@@ -249,7 +249,7 @@ Your form URL looks like `https://form.jotform.com/251234567890` — the number 
 ```bash
 export JOTFORM_API_KEY=your-api-key
 export JOTFORM_FORM_ID=your-form-id
-python3 app.py
+uv run app.py
 ```
 
 After completing a form over the phone, check your Jotform dashboard — the submission will appear as a native entry with all fields populated.

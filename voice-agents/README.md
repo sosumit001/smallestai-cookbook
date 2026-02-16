@@ -44,26 +44,25 @@ Build AI voice agents with the [Atoms SDK](https://atoms-docs.smallest.ai/dev).
 
 ## Quick Start
 
-### Step 1: Install base deps (once, from repo root)
+### Step 1: Create env + install base deps (once, from repo root)
 
 ```bash
-pip install -r requirements.txt
+uv venv
+uv pip install -r requirements.txt
 ```
 
 ### Step 2: Run an example
 
 ```bash
-cd voice-agents/getting_started
-pip install -r requirements.txt
-python3 app.py
+uv pip install -r voice-agents/getting_started/requirements.txt
+uv run voice-agents/getting_started/app.py
 ```
 
 For another example:
 
 ```bash
-cd voice-agents/bank_csr
-pip install -r requirements.txt
-python3 app.py
+uv pip install -r voice-agents/bank_csr/requirements.txt
+uv run voice-agents/bank_csr/app.py
 ```
 
 ### Step 3: Connect via CLI
@@ -81,6 +80,7 @@ export OPENAI_API_KEY=your_openai_key
 
 ## Requirements
 
+- [uv](https://docs.astral.sh/uv/) (Python package manager)
 - Python 3.10+
 - `smallestai` SDK (`>=4.3.0`)
 - OpenAI API key (for LLM)

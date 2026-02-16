@@ -58,7 +58,7 @@ langfuse   >= 2.0.0
 ### 1. Install
 
 ```bash
-pip install -r requirements.txt
+uv pip install -r requirements.txt
 ```
 
 ### 2. Set environment variables
@@ -86,7 +86,7 @@ LANGFUSE_SECRET_KEY=sk-lf-...
 ### 3. Run
 
 ```bash
-python3 app.py
+uv run app.py
 ```
 
 ### 4. Test
@@ -159,6 +159,11 @@ session.add_node(langfuse)
 
 agent = SupportAgent(langfuse=langfuse)  # OutputAgentNode — conversation
 session.add_node(agent)
+
+# Register event handlers BEFORE starting the session
+@session.on_event("on_event_received")
+async def on_event_received(_, event):
+    ...
 
 await session.start()
 ```

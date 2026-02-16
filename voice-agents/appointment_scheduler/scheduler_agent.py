@@ -85,8 +85,9 @@ def resolve_date_reference(ref: str) -> str:
             result_date = result_date.replace(year=result_date.year + 1)
         return result_date.strftime("%Y-%m-%d")
 
-    # Last resort — return raw
-    return ref
+    # Last resort — return today's date with a warning
+    logger.warning(f"[resolve_date] Could not parse '{ref}', defaulting to today")
+    return today.strftime("%Y-%m-%d")
 
 
 # ---------------------------------------------------------------------------

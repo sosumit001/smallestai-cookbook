@@ -32,8 +32,6 @@ async def setup_session(session: AgentSession):
     agent = SupportAgent(langfuse=langfuse)
     session.add_node(agent)
 
-    await session.start()
-
     @session.on_event("on_event_received")
     async def on_event_received(_, event: SDKEvent):
         logger.info(f"Event received: {event.type}")
@@ -46,6 +44,7 @@ async def setup_session(session: AgentSession):
             agent.context.add_message({"role": "assistant", "content": greeting})
             await agent.speak(greeting)
 
+    await session.start()
     await session.wait_until_complete()
 
     # Flush all Langfuse events before session ends
