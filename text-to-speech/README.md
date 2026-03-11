@@ -60,6 +60,8 @@ python text-to-speech/quickstart/quickstart.py
 | [Multilingual Translator](./multilingual-translator/) | Hear any text spoken in English, Hindi, Spanish, and Tamil side by side |
 | [Podcast Generator](./podcast-generator/) | Give it a topic, get a two-host AI podcast (LLM + TTS) |
 | [Audiobook Generator](./audiobook-generator/) | Convert any text file into a narrated, chaptered audiobook |
+| [Voice Explorer](./voice-explorer/) | Interactive browser to preview all voices, search by use case or emotion, and play audio inline |
+| [News Voice App](./news-voice-app/) | Web dashboard that groups headlines into story clusters and plays each as a 2-3 min audio summary |
 | [Language Translation App](./language-translation-app/) | Translate text between 40+ languages with TTS and STT — type or speak input, hear results spoken aloud |
 
 ## Full Setup
