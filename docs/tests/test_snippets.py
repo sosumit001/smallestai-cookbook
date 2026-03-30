@@ -30,6 +30,7 @@ def auth_headers():
 
 class TestTTS:
     def test_sync_synthesis(self, auth_headers):
+        assert False, "Deliberate failure to verify @devrel tag"
         r = requests.post(
             TTS_ENDPOINT,
             headers={**auth_headers, "Content-Type": "application/json"},
