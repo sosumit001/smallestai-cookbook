@@ -1,0 +1,80 @@
+name: Test Documentation Code Snippets
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'text-to-speech/*.py'
+      - 'text-to-speech/*.js'
+      - 'text-to-speech/*.sh'
+      - 'speech-to-text/*.py'
+      - 'speech-to-text/*.js'
+      - 'speech-to-text/*.sh'
+      - 'speech-to-text/getting-started/samples/**'
+      - 'docs/tests/**'
+  pull_request:
+    paths:
+      - 'text-to-speech/*.py'
+      - 'text-to-speech/*.js'
+      - 'text-to-speech/*.sh'
+      - 'speech-to-text/*.py'
+      - 'speech-to-text/*.js'
+      - 'speech-to-text/*.sh'
+      - 'docs/tests/**'
+  schedule:
+    # Weekly Monday 9am UTC — catch API breaking changes
+    - cron: '0 9 * * 1'
+  workflow_dispatch:
+
+jobs:
+  test-snippets:
+    name: Run docs snippet tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install requests pytest
+
+      - name: Run test suite
+        env:
+          SMALLEST_API_KEY: ${{ secrets.SMALLEST_API_KEY }}
+        run: pytest docs/tests/test_snippets.py -v --tb=short
+
+      - name: Run TTS quickstart script
+        env:
+          SMALLEST_API_KEY: ${{ secrets.SMALLEST_API_KEY }}
+        run: |
+          python text-to-speech/quickstart-python.py
+          [ -f output.wav ] && echo "TTS quickstart: OK ($(stat -c%s output.wav) bytes)" || exit 1
+
+      - name: Run STT quickstart script
+        env:
+          SMALLEST_API_KEY: ${{ secrets.SMALLEST_API_KEY }}
+        run: |
+          python speech-to-text/transcribe-python.py
+
+      - name: Notify Slack on failure
+        if: failure()
+        uses: slackapi/slack-github-action@v2.0.0
+        with:
+          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          webhook-type: incoming-webhook
+          payload: |
+            {
+              "text": "Cookbook docs snippet tests failed",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*Cookbook Code Snippet Tests Failed* :x:\n\nOne or more documentation code snippets in the cookbook are broken.\n\n*Trigger:* `${{ github.event_name }}` on `${{ github.ref_name }}`\n*Run:* <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View logs>"
+                  }
+                }
+              ]
+            }
