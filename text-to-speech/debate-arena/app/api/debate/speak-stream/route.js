@@ -21,10 +21,13 @@ export async function POST(request) {
   const apiKey =
     request.headers.get("x-smallest-key") || process.env.SMALLEST_API_KEY;
   const ttsMsg = { text: text.slice(0, 500), voice_id };
-  if (emotion) ttsMsg.emotion = emotion;
-  if (pitch) ttsMsg.pitch = pitch;
-  if (volume) ttsMsg.volume = volume;
-  if (prosody) ttsMsg.prosody = prosody;
+  // Expressive params (emotion, pitch, volume, prosody) are v3.2-only
+  // and can cause playback errors on some inputs. Only send them if
+  // the endpoint is confirmed to support them reliably.
+  // if (emotion) ttsMsg.emotion = emotion;
+  // if (pitch) ttsMsg.pitch = pitch;
+  // if (volume) ttsMsg.volume = volume;
+  // if (prosody) ttsMsg.prosody = prosody;
   if (accent) ttsMsg.accent = accent;
 
   // Fresh WebSocket per request — avoids voice bleed from pooled connections
