@@ -68,6 +68,53 @@ Press `Ctrl+C` to stop.
 
 ---
 
+## Key Implementation
+
+### Plugging in Smallest AI TTS
+
+Swapping in Smallest AI is a single service instantiation. The `voice` field accepts any voice ID from [waves.smallest.ai](https://waves.smallest.ai):
+
+```python
+from pipecat.services.smallest.tts import SmallestTTSService
+
+tts = SmallestTTSService(
+    api_key=os.getenv("SMALLEST_API_KEY"),
+    settings=SmallestTTSService.Settings(
+        voice="sophia",
+    ),
+)
+```
+
+### The Pipeline
+
+The full pipeline is seven stages. Order matters — each stage receives frames from the previous one:
+
+```python
+pipeline = Pipeline([
+    transport.input(),       # Browser microphone input via WebRTC
+    stt,                     # Speech → text (Deepgram)
+    user_aggregator,         # Accumulate user turn until VAD silence
+    llm,                     # Text → response (OpenAI)
+    tts,                     # Text → speech (Smallest AI)
+    transport.output(),      # Browser speaker output via WebRTC
+    assistant_aggregator,    # Accumulate assistant turn for context
+])
+```
+
+### Interruption — Zero Custom Code
+
+Interruption works out of the box. When `SileroVADAnalyzer` detects speech while the assistant is talking, Pipecat automatically sends an `InterruptionFrame` upstream that cancels TTS playback mid-stream. The user's new speech is then transcribed and sent to the LLM as a fresh turn.
+
+```python
+# VAD is the only config needed — interruption handling is automatic
+user_aggregator, assistant_aggregator = LLMContextAggregatorPair(
+    context,
+    user_params=LLMUserAggregatorParams(vad_analyzer=SileroVADAnalyzer()),
+)
+```
+
+---
+
 ## What to Try
 
 - **Interrupt mid-sentence** — start speaking while the assistant is talking; it stops immediately
