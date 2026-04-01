@@ -1,7 +1,7 @@
 # Pipecat Voice Agent
 
 
-Smallest AI's TTS is now natively integrated into [Pipecat](https://github.com/pipecat-ai/pipecat) — the open-source framework for real-time voice + AI pipelines. This example shows you how to wire it up into a fully working voice agent that runs in your browser.  
+Smallest AI's STT and TTS are now natively integrated into [Pipecat](https://github.com/pipecat-ai/pipecat) — the open-source framework for real-time voice + AI pipelines. This example shows you how to wire them up into a fully working voice agent that runs in your browser.
 
 Speak, and the agent responds using Smallest AI's low-latency `sophia` voice. Start speaking again while it's talking — the response stops mid-sentence and the agent picks up your new input immediately. Pipecat handles this natively, so there’s no need to write custom interruption logic.
 
@@ -94,7 +94,7 @@ The full pipeline is seven stages. Order matters — each stage receives frames 
 ```python
 pipeline = Pipeline([
     transport.input(),       # Browser microphone input via WebRTC
-    stt,                     # Speech → text (Deepgram)
+    stt,                     # Speech → text (Smallest AI)
     user_aggregator,         # Accumulate user turn until VAD silence
     llm,                     # Text → response (OpenAI)
     tts,                     # Text → speech (Smallest AI)
@@ -105,7 +105,7 @@ pipeline = Pipeline([
 
 ### Interruption — Zero Custom Code
 
-Interruption works out of the box. When `SileroVADAnalyzer` detects speech while the assistant is talking, Pipecat automatically sends an `InterruptionFrame` upstream that cancels TTS playback mid-stream. The user's new speech is then transcribed and sent to the LLM as a fresh turn.
+Interruption works out of the box. When `SileroVADAnalyzer` detects speech while the assistant is talking, Pipecat automatically sends an `InterruptionFrame` upstream that cancels audio playback mid-stream. The user's new speech is then transcribed by Smallest AI STT and sent to the LLM as a fresh turn.
 
 ```python
 # VAD is the only config needed — interruption handling is automatic
