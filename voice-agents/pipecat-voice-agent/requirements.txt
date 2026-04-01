@@ -1,0 +1,11 @@
+# Pipecat with Smallest AI TTS, Deepgram STT, Silero VAD, WebRTC, and server
+pipecat-ai[smallest,deepgram,silero,webrtc,runner]>=0.0.107
+
+# Prebuilt browser UI for SmallWebRTC transport
+pipecat-ai-small-webrtc-prebuilt>=2.4.0
+
+# LLM
+openai>=1.0.0
+
+# Utilities
+python-dotenv>=1.0.0
