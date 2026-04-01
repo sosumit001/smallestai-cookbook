@@ -16,7 +16,7 @@ Browser microphone
 SmallWebRTCTransport (WebRTC)
         │
         ▼
-       STT  ──►  OpenAI LLM  ──►  Smallest AI TTS
+Smallest AI STT  ──►  OpenAI LLM  ──►  Smallest AI TTS
                                            │
                                            ▼
                               SmallWebRTCTransport (WebRTC)
@@ -63,19 +63,21 @@ Press `Ctrl+C` to stop.
 |---|---|---|
 | `SMALLEST_API_KEY` | *(required)* | Your Smallest AI API key — [get one here](https://waves.smallest.ai) |
 | `OPENAI_API_KEY` | *(required)* | Your OpenAI API key |
-| `DEEPGRAM_API_KEY` | *(required)* | Your Deepgram API key |
 | Voice | `sophia` | Hardcoded in `main.py` — change to any voice at [waves.smallest.ai](https://waves.smallest.ai) |
 
 ---
 
 ## Key Implementation
 
-### Plugging in Smallest AI TTS
+### Plugging in Smallest AI STT + TTS
 
-Swapping in Smallest AI is a single service instantiation. The `voice` field accepts any voice ID from [waves.smallest.ai](https://waves.smallest.ai):
+Both speech-to-text and text-to-speech use your single `SMALLEST_API_KEY` — no extra accounts needed. The `voice` field accepts any voice ID from [waves.smallest.ai](https://waves.smallest.ai):
 
 ```python
+from pipecat.services.smallest.stt import SmallestSTTService
 from pipecat.services.smallest.tts import SmallestTTSService
+
+stt = SmallestSTTService(api_key=os.getenv("SMALLEST_API_KEY"))
 
 tts = SmallestTTSService(
     api_key=os.getenv("SMALLEST_API_KEY"),

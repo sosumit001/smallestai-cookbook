@@ -20,7 +20,7 @@ from pipecat.processors.aggregators.llm_response_universal import (
     LLMContextAggregatorPair,
     LLMUserAggregatorParams,
 )
-from pipecat.services.deepgram.stt import DeepgramSTTService
+from pipecat.services.smallest.stt import SmallestSTTService
 from pipecat.services.openai.llm import OpenAILLMService
 from pipecat.services.smallest.tts import SmallestTTSService
 from pipecat.transports.base_transport import TransportParams
@@ -60,7 +60,7 @@ async def run_bot(webrtc_connection: SmallWebRTCConnection):
         ),
     )
 
-    stt = DeepgramSTTService(api_key=os.getenv("DEEPGRAM_API_KEY"))
+    stt = SmallestSTTService(api_key=os.getenv("SMALLEST_API_KEY"))
 
     tts = SmallestTTSService(
         api_key=os.getenv("SMALLEST_API_KEY"),
