@@ -1,10 +1,9 @@
 # Pipecat Voice Agent
 
-A minimal interruptible voice assistant built with [Pipecat](https://github.com/pipecat-ai/pipecat) and Smallest AI.
 
-This is an integration stub — it shows how to plug Smallest AI's TTS into a Pipecat pipeline. The interesting Pipecat-specific behaviour (interruption, VAD, context memory) is documented below, but the framework doing the heavy lifting is Pipecat. See the [Pipecat docs](https://docs.pipecat.ai) for a deeper dive.
+Smallest AI's TTS is now natively integrated into [Pipecat](https://github.com/pipecat-ai/pipecat) — the open-source framework for real-time voice + AI pipelines. This example shows you how to wire it up into a fully working voice agent that runs in your browser.  
 
-Speak to the assistant in the browser, interrupt it mid-sentence at any time — Pipecat stops playback instantly and picks up your new input. No custom logic required; interruption is a first-class feature of the Pipecat pipeline.
+Speak, and the agent responds using Smallest AI's low-latency `sophia` voice. Start speaking again while it's talking — the response stops mid-sentence and the agent picks up your new input immediately. Pipecat handles this natively, so there’s no need to write custom interruption logic.
 
 ---
 
@@ -17,7 +16,7 @@ Browser microphone
 SmallWebRTCTransport (WebRTC)
         │
         ▼
-Deepgram STT  ──►  OpenAI LLM  ──►  Smallest AI TTS
+       STT  ──►  OpenAI LLM  ──►  Smallest AI TTS
                                            │
                                            ▼
                               SmallWebRTCTransport (WebRTC)
@@ -64,7 +63,7 @@ Press `Ctrl+C` to stop.
 |---|---|---|
 | `SMALLEST_API_KEY` | *(required)* | Your Smallest AI API key — [get one here](https://waves.smallest.ai) |
 | `OPENAI_API_KEY` | *(required)* | Your OpenAI API key |
-| `DEEPGRAM_API_KEY` | *(required)* | Your Deepgram API key — [get one here](https://console.deepgram.com) |
+| `DEEPGRAM_API_KEY` | *(required)* | Your Deepgram API key |
 | Voice | `sophia` | Hardcoded in `main.py` — change to any voice at [waves.smallest.ai](https://waves.smallest.ai) |
 
 ---
