@@ -1,4 +1,4 @@
-# Pipecat with Smallest AI TTS, Deepgram STT, Silero VAD, WebRTC, and server
+# Pipecat with Smallest AI STT + TTS, Silero VAD, WebRTC, and server
 pipecat-ai[smallest,silero,webrtc,runner]>=0.0.109
 
 # Prebuilt browser UI for SmallWebRTC transport

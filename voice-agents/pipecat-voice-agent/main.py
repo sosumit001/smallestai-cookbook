@@ -89,7 +89,7 @@ async def run_bot(webrtc_connection: SmallWebRTCConnection):
     pipeline = Pipeline(
         [
             transport.input(),       # Browser microphone input
-            stt,                     # Speech → text (Deepgram)
+            stt,                     # Speech → text (Smallest AI)
             user_aggregator,         # Accumulate user turn
             llm,                     # Text → response (OpenAI)
             tts,                     # Text → speech (Smallest AI)
