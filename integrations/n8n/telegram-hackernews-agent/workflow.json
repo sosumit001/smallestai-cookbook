@@ -1,0 +1,343 @@
+{
+  "name": "Telegram HN Audio Bot",
+  "nodes": [
+    {
+      "parameters": {
+        "jsCode": "const message = $input.first().json.message;\nconst hasAudio = message.voice;\nreturn [{ json: { hasAudio: !!hasAudio, messageType: hasAudio ? \"audio\" : \"text\", text: message.text || \"\", audioFileId: hasAudio ? (message.voice?.file_id) : null, chatId: message.chat.id } }];"
+      },
+      "id": "c22ec2af-13b5-4418-9db9-f5de3854f2fc",
+      "name": "Check Message Type",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        528,
+        304
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.hasAudio }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              },
+              "rightValue": true,
+              "id": "5890be74-371f-449c-8b72-245a1c10c7f6"
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "33a5bf5f-6ddd-429a-8b53-ae8757bd4558",
+      "name": "Route by Message Type",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        736,
+        304
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "stt",
+        "additionalOptions": {}
+      },
+      "type": "n8n-nodes-smallestai.smallestai",
+      "typeVersion": 1,
+      "position": [
+        1200,
+        176
+      ],
+      "id": "76edc35e-96f3-475c-a552-a5c8e00fae29",
+      "name": "Transcribe audio",
+      "credentials": {
+        "smallestaiApi": {
+          "id": "YOUR_SMALLESTAI_CREDENTIAL_ID",
+          "name": "Smallest.ai account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $('Telegram Trigger').item.json.message.voice.file_id }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        976,
+        160
+      ],
+      "id": "cb88332e-36ea-4052-b2ef-1c0eea827712",
+      "name": "Get a file",
+      "webhookId": "0f70360b-7e69-4242-b1ae-05f4d2ac7623",
+      "credentials": {
+        "telegramApi": {
+          "id": "YOUR_TELEGRAM_CREDENTIAL_ID",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "=You are a Hacker News assistant bot on Telegram.\n\nUser's name: {{ $('Telegram Trigger').first().json.message.chat.first_name }}\nUser's message: {{ $input.item.json.text ?? $input.item.json.transcription }}\n\nYOUR BEHAVIOR:\n- Always fetch live Hacker News data using your HTTP tool before responding\n- Never respond from memory or make up stories\n- Keep responses short and clean — max 5 stories, bullet point format\n\nWHEN USER ASKS FOR NEWS/STORIES:\nStep 1: Call the HTTP tool with URL: https://hacker-news.firebaseio.com/v0/topstories.json\nStep 2: Take the first 5 IDs from the response\nStep 3: For each ID, call: https://hacker-news.firebaseio.com/v0/item/{ID}.json\nStep 4: Extract title, score, and url from each story\nStep 5: Reply in this format:\n\n🔥 Top HN Stories for [user's name]:\n\n1. [Title] — ⬆️ [score] points\n   [url]\n\n2. [Title] — ⬆️ [score] points\n   [url]\n\n(up to 5 stories)\n\nWHEN USER ASKS ABOUT A SPECIFIC TOPIC:\nFetch top stories first, then filter and summarize only relevant ones.\n\nKeep it concise. No long explanations. Just the stories.\nDo'nt mention [Read] or id in the output message just simple normal message"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        1488,
+        448
+      ],
+      "id": "3d971cf8-ece2-4f90-ab62-5e34ef882454",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "YOUR_OPENAI_CREDENTIAL_ID",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ $fromAI('url', 'The HN API URL to fetch') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.4,
+      "position": [
+        1584,
+        656
+      ],
+      "id": "68081920-e5f4-4d70-9d62-208cf35243b9",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "text": "={{ $json.cleanText }}",
+        "voiceId": "aisha",
+        "additionalOptions": {
+          "speed": 0.8
+        }
+      },
+      "type": "n8n-nodes-smallestai.smallestai",
+      "typeVersion": 1,
+      "position": [
+        2112,
+        448
+      ],
+      "id": "5b165ea9-cfb0-451b-8246-9f19a931f6cc",
+      "name": "Synthesize speech",
+      "credentials": {
+        "smallestaiApi": {
+          "id": "YOUR_SMALLESTAI_CREDENTIAL_ID",
+          "name": "Smallest.ai account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = $input.first().json.output[0].content[0].text;\n\nconst clean = raw\n  .replace(/\\[([^\\]]+)\\]\\([^\\)]+\\)/g, '$1')\n  .replace(/🔥|⬆️|📈|✅|❌|👆/g, '')\n  .replace(/\\\\n/g, '. ')\n  .replace(/\\n/g, '. ')\n  .replace(/—/g, ',')\n  .replace(/\\*/g, '')\n  .replace(/#+\\s/g, '')\n  .replace(/\\s{2,}/g, ' ')\n  .trim();\n\nreturn [{ json: { cleanText: clean } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1888,
+        384
+      ],
+      "id": "f3c57ee5-fea4-47be-982d-02c048830076",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "operation": "sendAudio",
+        "chatId": "={{ $('Telegram Trigger').first().json.message.chat.id }}",
+        "binaryData": true,
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2320,
+        448
+      ],
+      "id": "6ec7ea83-bd41-4316-9f40-a1af8892f9f7",
+      "name": "Send an audio file",
+      "webhookId": "f2b80ab9-058f-44db-93c6-dccd4fb159d7",
+      "credentials": {
+        "telegramApi": {
+          "id": "YOUR_TELEGRAM_CREDENTIAL_ID",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        320,
+        304
+      ],
+      "id": "07efb1a4-f478-404f-891f-0a08a7de7a93",
+      "name": "Telegram Trigger",
+      "webhookId": "34d63aca-a25a-4e30-88de-e14562cd165f",
+      "credentials": {
+        "telegramApi": {
+          "id": "YOUR_TELEGRAM_CREDENTIAL_ID",
+          "name": "Telegram account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Check Message Type": {
+      "main": [
+        [
+          {
+            "node": "Route by Message Type",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route by Message Type": {
+      "main": [
+        [
+          {
+            "node": "Get a file",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcribe audio": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a file": {
+      "main": [
+        [
+          {
+            "node": "Transcribe audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "ai_tool": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Synthesize speech": {
+      "main": [
+        [
+          {
+            "node": "Send an audio file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Synthesize speech",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Check Message Type",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "d8880c1a-5221-4479-aa20-a43f50c15060",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "YOUR_N8N_INSTANCE_ID"
+  },
+  "id": "YOUR_WORKFLOW_ID",
+  "tags": []
+}

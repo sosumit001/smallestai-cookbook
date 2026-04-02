@@ -178,6 +178,14 @@ Build AI voice agents that can talk to anyone on voice or text, in any language,
 
 Use Smallest AI with popular frameworks and libraries.
 
+### n8n
+
+Build no-code and low-code voice automations using the [n8n-nodes-smallestai](https://www.npmjs.com/package/n8n-nodes-smallestai) community node.
+
+- [Telegram Hacker News Agent](./integrations/n8n/telegram-hackernews-agent/) — Telegram bot that accepts text or voice messages, fetches live Hacker News stories via GPT-4o-mini, and replies with a synthesized audio summary using Smallest AI TTS + STT
+
+**[See all n8n examples &rarr;](./integrations/n8n/)**
+
 ### LangChain
 
 Build voice AI applications using LangChain for chains, agents, memory, and prompt orchestration with Smallest AI for STT and TTS.
