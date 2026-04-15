@@ -1,9 +1,8 @@
 # Pipecat Voice Agent
 
-
 Smallest AI's STT and TTS are now natively integrated into [Pipecat](https://github.com/pipecat-ai/pipecat) — the open-source framework for real-time voice + AI pipelines. This example shows you how to wire them up into a fully working voice agent that runs in your browser.
 
-Speak, and the agent responds using Smallest AI's low-latency `sophia` voice. Start speaking again while it's talking — the response stops mid-sentence and the agent picks up your new input immediately. Pipecat handles this natively, so there’s no need to write custom interruption logic.
+Speak, and the agent responds using Smallest AI’s low-latency TTS. Start speaking again while it’s talking — the response stops mid-sentence and the agent picks up your new input immediately. Pipecat handles this natively, so there’s no need to write custom interruption logic. Voice and language are configurable via CLI flags.
 
 ---
 
@@ -39,7 +38,7 @@ When Silero VAD detects you speaking while the assistant is talking, Pipecat sen
 **Install**
 
 ```bash
-python3 -m venv .venv && source .venv/bin/activate
+python3.11 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 cp .env.sample .env
 # Edit .env and add your API keys
@@ -48,7 +47,8 @@ cp .env.sample .env
 **Run**
 
 ```bash
-python main.py
+python bot.py                              # defaults: sophia voice, English
+python bot.py --voice aria --language hi   # Hindi with aria voice
 ```
 
 Then open **http://localhost:7860** in your browser. Click **Connect**, allow microphone access, and start talking.
@@ -59,11 +59,21 @@ Press `Ctrl+C` to stop.
 
 ## Configuration
 
-| Variable | Default | Description |
+**Environment variables** (set in `.env`):
+
+| Variable | Description |
+|---|---|
+| `SMALLEST_API_KEY` | Your Smallest AI API key — [get one here](https://waves.smallest.ai) |
+| `OPENAI_API_KEY` | Your OpenAI API key — [get one here](https://platform.openai.com/api-keys) |
+
+**CLI flags** (optional, passed at startup):
+
+| Flag | Default | Description |
 |---|---|---|
-| `SMALLEST_API_KEY` | *(required)* | Your Smallest AI API key — [get one here](https://waves.smallest.ai) |
-| `OPENAI_API_KEY` | *(required)* | Your OpenAI API key |
-| Voice | `sophia` | Hardcoded in `main.py` — change to any voice at [waves.smallest.ai](https://waves.smallest.ai) |
+| `--voice` | `sophia` | TTS voice ID — browse voices at [waves.smallest.ai](https://waves.smallest.ai) |
+| `--language` | `en` | Language code for STT and TTS (e.g. `hi`, `de`, `fr`) |
+| `--host` | `localhost` | Host to bind the server to |
+| `--port` | `7860` | Port to bind the server to |
 
 ---
 
@@ -77,12 +87,17 @@ Both speech-to-text and text-to-speech use your single `SMALLEST_API_KEY` — no
 from pipecat.services.smallest.stt import SmallestSTTService
 from pipecat.services.smallest.tts import SmallestTTSService
 
-stt = SmallestSTTService(api_key=os.getenv("SMALLEST_API_KEY"))
+stt = SmallestSTTService(
+    api_key=os.getenv("SMALLEST_API_KEY"),
+    settings=SmallestSTTService.Settings(language="en"),
+)
 
 tts = SmallestTTSService(
     api_key=os.getenv("SMALLEST_API_KEY"),
+    sample_rate=24000,
     settings=SmallestTTSService.Settings(
         voice="sophia",
+        language="en",
     ),
 )
 ```
@@ -121,4 +136,5 @@ user_aggregator, assistant_aggregator = LLMContextAggregatorPair(
 
 - **Interrupt mid-sentence** — start speaking while the assistant is talking; it stops immediately
 - **Ask a long question** — watch the assistant respond in a continuous stream
-- **Change the voice** — edit the `voice` field in `main.py` to any voice ID from [waves.smallest.ai](https://waves.smallest.ai)
+- **Change the voice** — pass `--voice <id>` when starting, e.g. `python bot.py --voice aria`
+- **Change the language** — pass `--language <code>`, e.g. `python bot.py --language hi` for Hindi

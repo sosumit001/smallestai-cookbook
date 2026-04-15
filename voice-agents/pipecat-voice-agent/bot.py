@@ -35,6 +35,13 @@ from pipecat.transports.smallwebrtc.transport import SmallWebRTCTransport
 
 load_dotenv(override=True)
 
+parser = argparse.ArgumentParser(description="Pipecat Voice Agent")
+parser.add_argument("--host", default="localhost")
+parser.add_argument("--port", type=int, default=7860)
+parser.add_argument("--voice", default="sophia", help="TTS voice ID (default: sophia)")
+parser.add_argument("--language", default="en", help="Language code for STT and TTS (default: en)")
+args = parser.parse_args()
+
 ICE_SERVERS = [IceServer(urls="stun:stun.l.google.com:19302")]
 
 webrtc_handler = SmallWebRTCRequestHandler(ice_servers=ICE_SERVERS)
@@ -51,7 +58,7 @@ app = FastAPI(lifespan=lifespan)
 app.mount("/client", SmallWebRTCPrebuiltUI)
 
 
-async def run_bot(webrtc_connection: SmallWebRTCConnection):
+async def run_bot(webrtc_connection: SmallWebRTCConnection, voice: str = "sophia", language: str = "en"):
     transport = SmallWebRTCTransport(
         webrtc_connection=webrtc_connection,
         params=TransportParams(
@@ -60,12 +67,17 @@ async def run_bot(webrtc_connection: SmallWebRTCConnection):
         ),
     )
 
-    stt = SmallestSTTService(api_key=os.getenv("SMALLEST_API_KEY"))
+    stt = SmallestSTTService(
+        api_key=os.getenv("SMALLEST_API_KEY"),
+        settings=SmallestSTTService.Settings(language=language),
+    )
 
     tts = SmallestTTSService(
         api_key=os.getenv("SMALLEST_API_KEY"),
+        sample_rate=24000,
         settings=SmallestTTSService.Settings(
-            voice="sophia",
+            voice=voice,
+            language=language,
         ),
     )
 
@@ -98,20 +110,15 @@ async def run_bot(webrtc_connection: SmallWebRTCConnection):
         ]
     )
 
-    # Interruption is built into Pipecat — speaking while the assistant
-    # is talking immediately cancels playback and processes the new input.
     task = PipelineTask(
         pipeline,
-        params=PipelineParams(
-            enable_metrics=True,
-            enable_usage_metrics=True,
-        ),
+        params=PipelineParams(allow_interruptions=True),
     )
 
     @transport.event_handler("on_client_connected")
     async def on_client_connected(transport, client):
         logger.info("Client connected")
-        context.add_message({"role": "user", "content": "Please greet the user."})
+        context.add_message({"role": "user", "content": "Greet the user warmly and let them know they can start talking."})
         await task.queue_frames([LLMRunFrame()])
 
     @transport.event_handler("on_client_disconnected")
@@ -158,7 +165,7 @@ async def session_proxy(session_id: str, path: str, request: Request):
             )
 
             async def run_bot_task(connection):
-                asyncio.create_task(run_bot(connection))
+                asyncio.create_task(run_bot(connection, voice=args.voice, language=args.language))
 
             return await webrtc_handler.handle_web_request(webrtc_request, run_bot_task)
         elif request.method == "PATCH":
@@ -173,10 +180,5 @@ async def session_proxy(session_id: str, path: str, request: Request):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Pipecat Voice Agent")
-    parser.add_argument("--host", default="localhost")
-    parser.add_argument("--port", type=int, default=7860)
-    args = parser.parse_args()
-
     logger.info(f"Open http://{args.host}:{args.port} in your browser")
     uvicorn.run(app, host=args.host, port=args.port)
