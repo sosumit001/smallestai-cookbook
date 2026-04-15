@@ -35,6 +35,13 @@ When Silero VAD detects you speaking while the assistant is talking, Pipecat sen
 - Python 3.10+
 - A microphone — accessed directly through the browser, no system dependencies needed
 
+**Clone the repo**
+
+```bash
+git clone https://github.com/smallest-inc/cookbook.git
+cd cookbook/voice-agents/pipecat-voice-agent
+```
+
 **Install**
 
 ```bash
@@ -47,8 +54,7 @@ cp .env.sample .env
 **Run**
 
 ```bash
-python bot.py                              # defaults: sophia voice, English
-python bot.py --voice aria --language hi   # Hindi with aria voice
+python bot.py
 ```
 
 Then open **http://localhost:7860** in your browser. Click **Connect**, allow microphone access, and start talking.
