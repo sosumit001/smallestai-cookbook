@@ -1,0 +1,14 @@
+# LiveKit Agents framework
+livekit-agents[codecs]>=1.2.2
+
+# Smallest AI STT (Pulse) + TTS (Lightning) — both in one package
+livekit-plugins-smallestai
+
+# LLM
+livekit-plugins-openai
+
+# VAD
+livekit-plugins-silero
+
+# Utilities
+python-dotenv~=1.0
