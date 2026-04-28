@@ -21,6 +21,7 @@ npm install n8n-nodes-smallestai
 | Workflow | Description |
 |---|---|
 | [telegram-hackernews-agent](./telegram-hackernews-agent/) | Telegram bot that fetches live Hacker News stories and replies with synthesized audio using Smallest AI TTS + STT |
+| [pdf-to-podcast](./pdf-to-podcast/) | Upload a PDF via web form and receive a two-host podcast WAV in your inbox, generated with OpenAI and Smallest AI TTS |
 
 ## Links
 
