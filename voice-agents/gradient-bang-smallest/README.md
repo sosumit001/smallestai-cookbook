@@ -89,25 +89,25 @@ async def _startup_init_tts(voice_id: str = DEFAULT_VOICE_ID, language: Language
 
 ### 3. `src/gradientbang/pipecat_server/voices.py` — update the voice registry
 
-Gradient Bang maps short in-game names to provider voice IDs. Replace the existing provider IDs with Smallest AI voice names from [waves.smallest.ai](https://waves.smallest.ai):
+Gradient Bang maps short in-game names to provider voice IDs. Replace the existing provider IDs with Smallest AI voice names from [app.smallest.ai](https://app.smallest.ai):
 
 ```python
 # After (Smallest AI voice names)
 VOICES = {
     "ariel":   {"voice_id": "sophia",   "language": "en"},
-    "sterling":{"voice_id": "andrew",   "language": "en"},
-    "dani":    {"voice_id": "aria",     "language": "en"},
-    "caine":   {"voice_id": "james",    "language": "en"},
-    "voss":    {"voice_id": "lincoln",  "language": "en"},
-    "gordon":  {"voice_id": "henry",    "language": "en"},
-    "priya":   {"voice_id": "ananya",   "language": "hi"},
-    "lucia":   {"voice_id": "valentina","language": "es"},
-    "celeste": {"voice_id": "juliette", "language": "fr"},
-    "marco":   {"voice_id": "luca",     "language": "it"},
+    "sterling":{"voice_id": "robert",   "language": "en"},
+    "dani":    {"voice_id": "hannah",   "language": "en"},
+    "caine":   {"voice_id": "lucas",    "language": "en"},
+    "voss":    {"voice_id": "magnus",   "language": "en"},
+    "gordon":  {"voice_id": "jordan",   "language": "en"},
+    "priya":   {"voice_id": "sameera",  "language": "hi"},
+    "lucia":   {"voice_id": "daniella", "language": "es"},
+    "celeste": {"voice_id": "rachel",   "language": "en"},
+    "marco":   {"voice_id": "daniel",   "language": "en"},
 }
 ```
 
-Browse all available voice names and previews at [waves.smallest.ai](https://waves.smallest.ai).
+Browse all available voice names and previews at [app.smallest.ai](https://app.smallest.ai).
 
 ### 4. `src/gradientbang/pipecat_server/client_message_handler.py` — fix settings key
 
@@ -140,7 +140,7 @@ The full game requires four components running in parallel: **Supabase** (game s
 - [uv](https://docs.astral.sh/uv/) — Python package manager
 - [Docker](https://docs.docker.com/get-docker/) — required by the Supabase local stack
 - [Node.js 18+](https://nodejs.org/) and `pnpm` — for edge functions and web client
-- A Smallest AI API key — [get one at waves.smallest.ai](https://waves.smallest.ai)
+- A Smallest AI API key — [get one at app.smallest.ai](https://app.smallest.ai)
 - An OpenAI API key — [platform.openai.com](https://platform.openai.com/api-keys)
 - A Google AI key — [aistudio.google.com](https://aistudio.google.com/apikey)
 
@@ -249,7 +249,7 @@ Open **http://localhost:5173** in your browser, sign in with the account you cre
 
 | Variable | Description |
 |---|---|
-| `SMALLEST_API_KEY` | Your Smallest AI API key — [waves.smallest.ai](https://waves.smallest.ai) |
+| `SMALLEST_API_KEY` | Your Smallest AI API key — [app.smallest.ai](https://app.smallest.ai) |
 | `OPENAI_API_KEY` | OpenAI API key for the voice and task LLMs |
 | `GOOGLE_API_KEY` | Google AI key for the UI agent (Gemini) |
 | `SUPABASE_URL` | Local: `http://127.0.0.1:54321` |
@@ -297,13 +297,13 @@ Interruption handling is entirely in Pipecat's pipeline and isn't affected by th
 
 ### Voice registry
 
-Gradient Bang maps short in-game character names to provider-specific voice IDs in `voices.py`. After the swap, each entry points to a Smallest AI voice name. Browse all options at [waves.smallest.ai](https://waves.smallest.ai).
+Gradient Bang maps short in-game character names to provider-specific voice IDs in `voices.py`. After the swap, each entry points to a Smallest AI voice name. Browse all options at [app.smallest.ai](https://app.smallest.ai).
 
 ---
 
 ## What to Try
 
 - **Interrupt the bot mid-sentence** — start speaking while it's responding and watch the reply stop instantly
-- **Swap voices** — change a voice in `voices.py` to any name from [waves.smallest.ai](https://waves.smallest.ai) and restart the bot
+- **Swap voices** — change a voice in `voices.py` to any name from [app.smallest.ai](https://app.smallest.ai) and restart the bot
 - **Run an NPC agent** — use `uv run npc-run <character-id> "explore 3 sectors"` to watch an autonomous task agent play the game
 - **Try a different language** — pass `language=Language.HI` (or another supported code) to both `SmallestSTTService` and `SmallestTTSService` for Hindi, French, Spanish, and more
