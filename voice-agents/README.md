@@ -1,6 +1,14 @@
 # Voice Agents Cookbook
 
-Build AI voice agents with the [Atoms SDK](https://atoms-docs.smallest.ai/dev).
+Build AI voice agents with the [Atoms SDK](https://atoms-docs.smallest.ai/dev) or [Pipecat](https://github.com/pipecat-ai/pipecat).
+
+## Pipecat
+
+| Example | What You'll Learn |
+|---------|-------------------|
+| [pipecat-voice-agent](./pipecat-voice-agent/) | Smallest AI STT + TTS in a browser voice agent using SmallWebRTC |
+| [livekit-voice-agent](./livekit-voice-agent/) | Smallest AI STT + TTS with LiveKit transport |
+| [gradient-bang-smallest](./gradient-bang-smallest/) | Swap existing STT + TTS providers for Smallest AI in the Gradient Bang multiplayer game; run locally with Docker + Supabase |
 
 ## Basics
 
