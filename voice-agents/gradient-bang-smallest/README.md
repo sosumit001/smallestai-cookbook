@@ -1,6 +1,6 @@
 # Gradient Bang with Smallest AI STT + TTS
 
-[Gradient Bang](https://github.com/pipecat-ai/gradient-bang) is an open-source online multiplayer game where players explore, trade, and battle — and every NPC, ship, and world event is driven by a real AI agent. This cookbook shows you how to swap the existing STT and TTS providers for **Smallest AI**, consolidating to a single API key, and how to run the full game stack locally with Docker and Supabase.
+[Gradient Bang](https://github.com/pipecat-ai/gradient-bang) is an open-source online multiplayer game by [Pipecat](https://www.pipecat.ai/) where players explore, trade, and battle — and every NPC, ship, and world event is driven by a real AI agent. This cookbook shows you how to swap the existing STT and TTS providers for **Smallest AI**, consolidating to a single API key, and how to run the full game stack locally with Docker and Supabase.
 
 The result is identical gameplay, voice interaction, and interruption behavior — just powered by Smallest AI's low-latency WebSocket STT and TTS.
 
